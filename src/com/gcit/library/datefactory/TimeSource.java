@@ -1,4 +1,4 @@
-package datefactory;
+package com.gcit.library.datefactory;
 
 import java.sql.Date;
 
@@ -12,5 +12,6 @@ public interface TimeSource {
 	  Date currentTimeMillis_d();
 	  Date onedaybefore_d();
 	  Date onedayafter_d();
+	  Date oneweekafter_d();
 
 	} 

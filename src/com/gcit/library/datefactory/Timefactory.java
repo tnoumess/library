@@ -1,4 +1,4 @@
-package datefactory;
+package com.gcit.library.datefactory;
 
 public class Timefactory {
 	

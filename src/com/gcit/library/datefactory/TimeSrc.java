@@ -1,4 +1,4 @@
-package datefactory;
+package com.gcit.library.datefactory;
 
 import java.sql.Date;
 
@@ -43,10 +43,16 @@ public final class TimeSrc implements TimeSource {
 		return new Date(currentTimeMillis()+ONE_DAY);
 	}
 	
-	
+	/*
 	public TimeSrc() {
 		// TODO Auto-generated constructor stub
 		System.out.println("in");
+	}*/
+
+	@Override
+	public Date oneweekafter_d() {
+		// TODO Auto-generated method stub
+		return new Date(currentTimeMillis()+ONE_DAY*7);
 	}
 
 	} 
