@@ -4,6 +4,13 @@ import java.sql.Date;
 
 
 
+/**
+ * @author Thierry Edson Noumessi
+ *
+ * @date Jun 29, 2015
+ * @2:27:51 PM
+ * @Runner.java
+ */
 public class Runner {
 
 	public static void main(String[] args) {

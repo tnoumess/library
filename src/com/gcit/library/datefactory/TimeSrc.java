@@ -2,6 +2,13 @@ package com.gcit.library.datefactory;
 
 import java.sql.Date;
 
+/**
+ * @author Thierry Edson Noumessi
+ *
+ * @date Jun 29, 2015
+ * @2:27:16 PM
+ * @TimeSrc.java
+ */
 public final class TimeSrc implements TimeSource {
 
 	 /**The actual time.*/
@@ -52,7 +59,7 @@ public final class TimeSrc implements TimeSource {
 	@Override
 	public Date oneweekafter_d() {
 		// TODO Auto-generated method stub
-		return new Date(currentTimeMillis()+ONE_DAY*7);
+		return new Date(currentTimeMillis()+ONE_DAY*6);
 	}
 
 	} 

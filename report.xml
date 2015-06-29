@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dfxml xmloutputversion='1.0'>
+  <metadata 
+  xmlns='http://afflib.org/tcpflow/' 
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' 
+  xmlns:dc='http://purl.org/dc/elements/1.1/'>
+    <dc:type>Feature Extraction</dc:type>
+  </metadata>
+  <creator version='1.0'>
+    <program>TCPFLOW</program>
+    <version>1.4.4</version>
+    <build_environment>
+      <compiler>4.9.1 (4.9.1 20140813 (Red Hat 4.9.1-7))</compiler>
+      <CPPFLAGS>-pthread -I/usr/local/include -O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -DUTC_OFFSET=+0000 </CPPFLAGS>
+      <CFLAGS>-g   -pthread -O3 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -MD -D_FORTIFY_SOURCE=2 -Wpointer-arith -Wmissing-declarations -Wmissing-prototypes -Wshadow -Wwrite-strings -Wcast-align -Waggregate-return -Wbad-function-cast -Wcast-qual -Wundef -Wredundant-decls -Wdisabled-optimization -Wfloat-equal -Wmultichar -Wc++-compat -Wmissing-noreturn -Wall -Wstrict-prototypes</CFLAGS>
+      <CXXFLAGS>-g -pthread -O3 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches  -m64 -mtune=generic -std=c++11 -Wall -MD -D_FORTIFY_SOURCE=2 -Wpointer-arith -Wshadow -Wwrite-strings -Wcast-align -Wredundant-decls -Wdisabled-optimization -Wfloat-equal -Wmultichar -Wmissing-noreturn -Woverloaded-virtual -Wsign-promo -funit-at-a-time -Wstrict-null-sentinel -Weffc++ </CXXFLAGS>
+      <LDFLAGS>-L/usr/local/lib -Wl,-z,relro </LDFLAGS>
+      <LIBS>-lpcap -lcairo -lfontconfig -lfreetype -lbz2 -lpixman-1 -lexpat  -lssl -lcrypto -lz -lssl -lcrypto </LIBS>
+      <compilation_date>2014-08-18T21:46:00</compilation_date>
+      <library name="boost" version="105500"/>
+    </build_environment>
+    <execution_environment>
+      <os_sysname>Linux</os_sysname>
+      <os_release>3.18.7-200.fc21.x86_64</os_release>
+      <os_version>#1 SMP Wed Feb 11 21:53:17 UTC 2015</os_version>
+      <host>localhost.localdomain</host>
+      <arch>x86_64</arch>
+      <command_line>tcpflow -i any -C -J port 8443</command_line>
+      <uid>0</uid>
+      <start_time>2015-06-29T05:27:59Z</start_time>
+    </execution_environment>
+  </creator>
+  <configuration>
+  </configuration>
+  <tdelta>0</tdelta>
+  <configuration>
+    <fileobject>
+      <filesize>0</filesize>
+      <tcpflow startime='1976-06-01T02:37:00.501816Z' endtime='2015-06-29T12:32:53.439328Z' src_ipn='127.0.0.1' dst_ipn='127.0.0.1' mac_daddr='00:00:03:04:00:06' packets='2' srcport='8443' dstport='60526' family='2' />
+    </fileobject>
+    <fileobject>
+      <filesize>0</filesize>
+      <tcpflow startime='2015-06-29T12:32:53.439175Z' endtime='2015-06-29T12:32:53.489404Z' src_ipn='127.0.0.1' dst_ipn='127.0.0.1' mac_daddr='00:00:03:04:00:06' packets='4' srcport='60526' dstport='8443' family='2' />
+    </fileobject>

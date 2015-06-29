@@ -1,7 +1,7 @@
 /**
  * This class is used to launch the application
  */
-package com.gcit.library;
+package com.gcit.library.view;
 
 import java.util.ArrayList;
 import java.util.HashSet;

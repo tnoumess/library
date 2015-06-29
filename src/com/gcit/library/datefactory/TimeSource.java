@@ -2,6 +2,13 @@ package com.gcit.library.datefactory;
 
 import java.sql.Date;
 
+/**
+ * @author Thierry Edson Noumessi
+ *
+ * @date Jun 29, 2015
+ * @2:27:39 PM
+ * @TimeSource.java
+ */
 public interface TimeSource {
 
 	  /** Return the system time. */  
