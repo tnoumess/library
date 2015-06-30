@@ -283,8 +283,9 @@ public class Dao {
      * @param BorrId: Borrower Id
      * @return True if the check out is successful
      * or false otherwise.
+     * @throws SQLException 
      */
-	public boolean checkout_book(int book_Id,int lib_Id,int BorrId){
+	public boolean checkout_book(int book_Id,int lib_Id,int BorrId) throws SQLException{
 		if(check_Auth_book(book_Id, lib_Id, BorrId)){
 			Map<Integer,String> l=new HashMap<Integer,String>();
 			Connection conn=null;;
@@ -302,7 +303,9 @@ public class Dao {
 				String setfkc="set foreign_key_checks=0";	
 				PreparedStatement pStatement=conn.prepareStatement(setfkc);
 				pStatement.execute();
-          if(check_Auth_book(book_Id, lib_Id, BorrId)){
+          if(check_Auth_book2(book_Id, lib_Id, BorrId)){
+        	  
+        	  System.out.println("inside");
         	  String Query = "UPDATE tbl_book_loans SET dateOut=curdate(), dueDate=?,dateIn=? where (bookId=? and branchId =? and cardNo=? )";		
 				PreparedStatement pstmt1 = conn.prepareStatement(Query);
 				pstmt1.setDate(1, tf.gettime().oneweekafter_d());
@@ -316,6 +319,7 @@ public class Dao {
 				System.out.println("Update successful! ");	
 				System.out.println("Please return book by: "+tf.gettime().oneweekafter_d());
           }else{
+        	  System.out.println("inside2");
 				String selectQuery2 = "insert into tbl_book_loans values(?,?,?,curdate(),?,null)";		
 				PreparedStatement pstmt2 = conn.prepareStatement(selectQuery2);
 				pstmt2.setInt(1,book_Id);
@@ -333,11 +337,12 @@ public class Dao {
 				System.out.println("Please return book by: "+tf.gettime().oneweekafter_d());
 
           }
-				conn.commit();
+				
 
 				conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+				conn.commit();
 				e.printStackTrace();
 				return false;
 			}
@@ -381,6 +386,52 @@ public class Dao {
 			if(rs.next()&&rs.getString("dateIn")==null) 
 				return false;
 			return true;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("exception");
+			e.printStackTrace();
+
+			return false;
+		}
+
+
+	}
+	
+	
+	
+	/**
+	 * Verifies if the Borrower is allowed to check out
+	 * a given book from a given library.
+	 * The rule is that you cannot borrow another copy of 
+	 * the same book(from library @param2)
+	 * If you have have not returned (to library @param2)
+	 * the initial copy you borrowed.
+	 * @param book_Id: Book Id
+	 * @param2 lib_Id: Library Ib
+	 * @param BorrId: Borrower Id
+	 * @return False if he already has the book
+	 * and has not returned yet. from the  
+	 */
+	public boolean check_Auth_book2(int book_Id,int lib_Id,int BorrId){
+		Connection conn=null;
+		try {
+			conn =getconnection();
+			Statement stmt = conn.createStatement();
+
+			/**
+			 * Is the user has the book already? is so return non empty result
+			 */
+			String selectQuery2 = "select*from tbl_book_loans where (bookId=? and branchId=? and cardNo=?)";		
+			PreparedStatement pstmt2 = conn.prepareStatement(selectQuery2);
+			pstmt2.setInt(1,book_Id);
+			pstmt2.setInt(2,lib_Id);
+			pstmt2.setInt(3,BorrId);
+			ResultSet rs=pstmt2.executeQuery(); 
+			
+			if(rs.next()) 
+				return true;
+			return false;
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -491,7 +542,7 @@ public class Dao {
 			Statement stmt2=conn.createStatement();
 
 			ResultSet rs= stmt2.executeQuery("select * from tbl_book_copies where (bookId="+book_Id+" and branchId ="+lib_Id+")");
-
+System.out.println("BookId:"+book_Id+"  branch:"+lib_Id);
 			if(rs.next()){
 
 				System.out.println("by increment");
@@ -506,7 +557,7 @@ public class Dao {
 				System.out.println("by insert with no copy");
 				PreparedStatement stmt3=conn.prepareStatement("insert into tbl_book_copies values(?,?,?)");
 
-				stmt3.setInt(1, BorrId);
+				stmt3.setInt(1, book_Id);
 				stmt3.setInt(2, lib_Id);
 				stmt3.setInt(3, 1);
 				stmt3.executeUpdate();
@@ -947,7 +998,7 @@ public class Dao {
 		
 		}catch(SQLException e){
 			System.out.println("ERROR: An error has occured");
-			System.out.println(e);
+			System.out.println();
 			return false;
 		}finally{
 			conn.close();
