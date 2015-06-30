@@ -9,10 +9,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.gcit.library.datefactory.Timefactory;
+import com.gcit.library.domain.*;
 
 /**
  * @author Thierry Edson Noumessi
@@ -24,7 +28,7 @@ import com.gcit.library.datefactory.Timefactory;
 public class Dao {
 	
 	
-	private  Timefactory tf=new Timefactory();
+	public  Timefactory tf=new Timefactory();
 	
 	 /**
      * Any User:
@@ -535,5 +539,656 @@ public class Dao {
 		}
 	}
 
+	
+	public boolean Insertbook(Book b) throws SQLException{		
+		
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("insert into tbl_book (title,pubId) values(?,?)");
 
+		stmt.setString(1,b.getBookTitle() );
+		if(b.getPublisherId()==0){
+			stmt.setString(2, null);}else{
+		    stmt.setString(2, Integer.toString(b.getPublisherId()));
+		}
+		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println(b.getPublisherId());
+			System.out.println("ERROR: Insertion failed");
+			System.out.println(e);
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+	} 
+	
+	public boolean InsertAuthor(Author a) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("insert into tbl_author values(,?)");
+
+		stmt.setString(1, a.getAuthorName());
+		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+		
+	}
+	
+	public boolean InsertPublisher(Publisher p) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("insert into tbl_publisher(publisherName,publisherAddress,publisherPhone) values(?,?,?)");
+
+		stmt.setString(1,p.getName() );
+		stmt.setString(2, p.getAddress());
+		stmt.setString(3,p.getPhone());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+		
+	}
+	public boolean InsertLibrary(Library l) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("insert into tbl_library_branch values(,?,?)");
+
+		stmt.setString(1, l.getBranchName());
+		stmt.setString(2,l.getBranchAddress() );
+		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+		
+	}
+	public boolean InsertBorrowers(Borrower b) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("insert into tbl_borrower values(,?,?,?)");
+
+		stmt.setString(1, b.getName());
+		stmt.setString(2, b.getAddress());
+		stmt.setString(3, b.getPhone());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+		
+	}
+	public boolean OverrideLoan(Loans l, java.sql.Date d) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+			PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_book_loans SET dueDate=? where (bookId=? and branchId =? and cardNo=? )");
+
+		stmt.setDate(1, d);
+		stmt.setInt(2, l.getBookId());
+		stmt.setInt(3,l.getBranchId());
+		stmt.setInt(4,l.getBorrId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+		
+	}
+    public boolean InsertGenre(Genre g) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("insert into tbl_genre (genre_name) values(?)");
+		stmt.setString(1,g.getGenreName());		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			System.out.println(e);
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+    	
+    }
+    public boolean InsertBook_Genre(BookGenres bg) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("insert into tbl_book_genres values(?,?)");
+
+		stmt.setInt(1, bg.getGenreId());
+		stmt.setInt(2, bg.getBookId());
+		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+    	
+    }
+    public boolean InsertBook_Author(BookAuthors ba) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("insert into tbl_book_authors values(?,?)");
+
+		stmt.setInt(1,ba.getBookId() );
+		stmt.setInt(2, ba.getAuthorId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Insertion successful!");
+		return true;
+    	
+    }
+    
+    
+    // update
+    
+    public boolean Updatebook(Book b) throws SQLException{		
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_book SET title=?, pubId=? where (bookId=?)");
+
+		stmt.setString(1,b.getBookTitle() );
+		stmt.setInt(2,b.getPublisherId() );
+		stmt.setInt(3,b.getBookId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+		
+	} 
+    
+    public boolean Updatebook1(Book b) throws SQLException{		
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_book SET title=? where (bookId=?)");
+
+		stmt.setString(1,b.getBookTitle() );
+		stmt.setInt(2,b.getBookId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+		
+	} 
+	
+	public boolean UpdateAuthor(Author a) throws SQLException{
+		
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_author SET authorName=? where (authorId=?)");
+
+		stmt.setString(1, a.getAuthorName());
+		stmt.setInt(2, a.getAuthorId());
+		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+		
+	}
+	
+	public boolean UpdatePublisher(Publisher p) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_publisher SET publisherName=?,publisherAddress=?, publisherPhone=? where (publisherId=?)");
+
+		stmt.setString(1,p.getName() );
+		stmt.setString(2,p.getAddress() );
+		stmt.setString(3, p.getPhone());
+		stmt.setInt(4, p.getPublisherId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+		
+	}
+	public boolean UpdateLibrary(Library l) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_library_branch SET branchName=?, branchAddress=? where ( branchId =? )");
+
+		stmt.setString(1,l.getBranchName() );
+		stmt.setString(2, l.getBranchAddress());
+		stmt.setInt(3,l.getBranchId() );
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+		
+	}
+	public boolean UpdateBorrowers(Borrower b) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_borrower SET name=?, address=?, phone=? where (cardNo =? )");
+
+		stmt.setString(1,b.getName());
+		stmt.setString(2,b.getAddress());
+		stmt.setString(3,b.getPhone());
+		stmt.setInt(4, b.getBorrId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+		
+	}
+	
+    public boolean UpdateGenre(Genre g) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_genre SET genre_name=? where (genre_id =? )");
+
+		stmt.setString(1, g.getGenreName());
+		stmt.setInt(2,g.getGenreId() );
+		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+    }
+    public boolean UpdateBook_Genre(BookGenres old,BookGenres newbg) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_book_genres SET genre_id=?,bookId=? where (bookId=? and genre_id =? )");
+
+		stmt.setInt(1, newbg.getGenreId());
+		stmt.setInt(2, newbg.getBookId());
+		stmt.setInt(3, old.getBookId());
+		stmt.setInt(4, old.getGenreId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+    }
+    public boolean UpdateBook_Author(BookAuthors oldba,BookAuthors newba) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("UPDATE tbl_book_authors SET bookId=?,authorId=? where (bookId=? and authorId=?)");
+
+		stmt.setInt(1, newba.getBookId());
+		stmt.setInt(2, newba.getAuthorId());
+		stmt.setInt(3,oldba.getBookId() );
+		stmt.setInt(4, oldba.getAuthorId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("Update successful!");
+		return true;
+    }
+    
+    //delete
+    
+    public boolean Deletebook(Book b) throws SQLException{	
+    	
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("DELETE FROM tbl_book  where (bookId=?)");
+
+		stmt.setInt(1, b.getBookId());
+		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			System.out.println(e);
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("deletion successful!");
+		return true;
+		
+	} 
+	
+	public boolean DeleteAuthor(Author a) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("DELETE FROM tbl_author  where (authorId =?)");
+
+		stmt.setInt(1,a.getAuthorId() );
+		
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("deletion successful!");
+		return true;
+		
+	}
+	
+	public boolean DeletePublisher(Publisher p) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("DELETE FROM tbl_publisher  where (publisherId =? )");
+
+		stmt.setInt(1,p.getPublisherId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("deletion successful!");
+		return true;
+		
+	}
+	public boolean DeleteLibrary(Library l) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("DELETE FROM tbl_library_branch  where (branchId =? )");
+
+		stmt.setInt(1, l.getBranchId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("deletion successful!");
+		return true;
+		
+	}
+	public boolean DeleteBorrowers(Borrower b) throws SQLException{
+		Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("DELETE FROM tbl_borrower  where (cardNo =? )");
+
+		stmt.setInt(1,b.getBorrId() );
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("deletion successful!");
+		return true;
+	}
+	
+    public boolean DeleteGenre(Genre g) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("DELETE FROM tbl_genre  where (genre_id=?)");
+
+		stmt.setInt(1, g.getGenreId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("deletion successful!");
+		return true;
+    }
+    public boolean DeleteBook_Genre(BookGenres bg) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("DELETE FROM tbl_book_genres  where (genre_id=? and bookId =?)");
+
+		stmt.setInt(1, bg.getGenreId());
+		stmt.setInt(2, bg.getBookId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("deletion successful!");
+		return true;
+    }
+    public boolean DeleteBook_Author(BookAuthors ba) throws SQLException{
+    	Connection conn=null;;
+		try {
+			conn =getconnection();
+		PreparedStatement stmt=conn.prepareStatement("DELETE FROM tbl_book_authors  where (bookId=? and authorId =? )");
+
+		stmt.setInt(1,ba.getBookId());
+		stmt.setInt(2,ba.getAuthorId());
+		stmt.executeUpdate();
+		
+		}catch(SQLException e){
+			System.out.println("ERROR: An error has occured");
+			return false;
+		}finally{
+			conn.close();
+		}
+		System.out.println("deletion successful!");
+		return true;
+    }
+    
+    //select
+    
+    
+    public Map<Integer,String> list_genre(){
+
+		Map<Integer,String> l=new HashMap<Integer,String>();
+		Connection conn=null;;
+		try {
+			conn =getconnection();		
+			Statement stmt = conn.createStatement();
+			String selectQuery = "select * from tbl_genre";
+
+			PreparedStatement pstmt = conn.prepareStatement(selectQuery);
+			ResultSet rs = pstmt.executeQuery(); 
+
+			while(rs.next()){
+				l.put(rs.getInt("genre_id"), rs.getString("genre_name"));
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return l;
+		}
+		
+		return l;
+
+	}
+    
+    public Set<Publisher> list_publisher(){
+
+		Set<Publisher> s=new HashSet<Publisher>();
+		Publisher p;
+		Connection conn=null;;
+		try {
+			conn =getconnection();		
+			Statement stmt = conn.createStatement();
+			String selectQuery = "select * from tbl_publisher";
+
+			PreparedStatement pstmt = conn.prepareStatement(selectQuery);
+			ResultSet rs = pstmt.executeQuery(); 
+
+			while(rs.next()){
+				p=new Publisher();
+				p.setPublisherId(rs.getInt("publisherId"));
+				p.setName(rs.getString("publisherName"));
+				p.setAddress(rs.getString("publisherAddress"));
+				p.setPhone(rs.getString("publisherPhone"));
+				s.add(p);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return s;
+		}
+		
+		return s;
+
+	}
+
+    public Map<Integer,Book> list_book(){
+
+		Map<Integer,Book> m=new HashMap<Integer, Book>();
+		Book b;
+		Connection conn=null;;
+		try {
+			conn =getconnection();		
+			Statement stmt = conn.createStatement();
+			String selectQuery = "select * from tbl_book";
+
+			PreparedStatement pstmt = conn.prepareStatement(selectQuery);
+			ResultSet rs = pstmt.executeQuery(); 
+
+			while(rs.next()){
+				b=new Book();
+				b.setBookId(rs.getInt("bookId"));
+				b.setBookTitle(rs.getString("title"));
+				if(rs.getString("pubId")==null){
+					b.setPublisherId(-1);
+				}else{
+				b.setPublisherId(rs.getInt("pubId"));	
+				}
+								
+				m.put(b.getBookId(), b);
+			}
+			
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e);
+			return m;
+		}
+		
+		return m;
+
+	}
+    
 }

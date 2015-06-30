@@ -23,13 +23,14 @@ import com.gcit.library.persistence.Dao;
  * @Start.java
  */
 public class Library {
-	
+	private Admin admin=new Admin();
 	private Dao dao=new Dao();
 	
 	/**
 	 * This is the Main menu of our Application
+	 * @throws SQLException 
 	 */
-	public void Menu(){
+	public void Menu() throws SQLException{
 		boolean exit_Main=false;
 		do{
 			System.out.println("1) Librarian");
@@ -44,7 +45,7 @@ public class Library {
 				case '1':
 					exit_Main=false; Lib1();break;
 				case '2':
-					exit_Main=false;break;
+					exit_Main=false;admin.Menu(); break;
 				case '3':
 					exit_Main=false; Borr(dao.list_Borrower());break;
 				case '4':
